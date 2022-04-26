@@ -5,8 +5,8 @@ const Post = require('../models/post')
 
 const router = express.Router()
 
-router.post('/users/:id/posts', auth, async (req, res) => {
-    const uid = req.params.id
+router.post('/posts/me', auth, async (req, res) => {
+    const uid = req.user._id
     const post = new Post({ ...req.body, by: uid })
     try {
         await post.save()
@@ -29,8 +29,8 @@ router.get('/posts', async (req, res) => {
     }
 })
 
-router.get('/users/:id/posts', auth, async (req, res) => {
-    const uid = req.params.id
+router.get('/posts/me', auth, async (req, res) => {
+    const uid = req.user._id
     try {
         const posts = await Post.find({ by: new mongoose.Types.ObjectId(uid) })
         if (posts.length != 0) {
@@ -43,8 +43,8 @@ router.get('/users/:id/posts', auth, async (req, res) => {
     }
 })
 
-router.get('/users/:id/posts/:postId', auth, async (req, res) => {
-    const uid = req.params.id
+router.get('/posts/me/:postId', auth, async (req, res) => {
+    const uid = req.user._id
     const postId = req.params.postId
     try {
         const post = await Post.findOne({
@@ -61,8 +61,8 @@ router.get('/users/:id/posts/:postId', auth, async (req, res) => {
     }
 })
 
-router.patch('/users/:id/posts/:postId', auth, async (req, res) => {
-    const uid = req.params.id
+router.patch('/posts/me/:postId', auth, async (req, res) => {
+    const uid = req.user._id
     const postId = req.params.postId
     const updates = Object.keys(req.body)
     const allowedUpdates = ['location', 'experience', 'tripRating']
@@ -88,8 +88,8 @@ router.patch('/users/:id/posts/:postId', auth, async (req, res) => {
     }
 })
 
-router.delete('/users/:id/posts/:postId', auth, async (req, res) => {
-    const uid = req.params.id
+router.delete('/posts/me/:postId', auth, async (req, res) => {
+    const uid = req.user._id
     const postId = req.params.postId
     try {
         const post = await Post.findOne({
