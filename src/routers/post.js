@@ -1,11 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const validateId = require('../middleware/validId')
+const auth = require('../middleware/auth')
 const Post = require('../models/post')
 
 const router = express.Router()
 
-router.post('/users/:id/posts', validateId, async (req, res) => {
+router.post('/users/:id/posts', auth, async (req, res) => {
     const uid = req.params.id
     const post = new Post({ ...req.body, by: uid })
     try {
@@ -29,7 +29,7 @@ router.get('/posts', async (req, res) => {
     }
 })
 
-router.get('/users/:id/posts', validateId, async (req, res) => {
+router.get('/users/:id/posts', auth, async (req, res) => {
     const uid = req.params.id
     try {
         const posts = await Post.find({ by: new mongoose.Types.ObjectId(uid) })
@@ -43,7 +43,7 @@ router.get('/users/:id/posts', validateId, async (req, res) => {
     }
 })
 
-router.get('/users/:id/posts/:postId', validateId, async (req, res) => {
+router.get('/users/:id/posts/:postId', auth, async (req, res) => {
     const uid = req.params.id
     const postId = req.params.postId
     try {
@@ -61,7 +61,7 @@ router.get('/users/:id/posts/:postId', validateId, async (req, res) => {
     }
 })
 
-router.patch('/users/:id/posts/:postId', validateId, async (req, res) => {
+router.patch('/users/:id/posts/:postId', auth, async (req, res) => {
     const uid = req.params.id
     const postId = req.params.postId
     const updates = Object.keys(req.body)
@@ -88,7 +88,7 @@ router.patch('/users/:id/posts/:postId', validateId, async (req, res) => {
     }
 })
 
-router.delete('/users/:id/posts/:postId', validateId, async (req, res) => {
+router.delete('/users/:id/posts/:postId', auth, async (req, res) => {
     const uid = req.params.id
     const postId = req.params.postId
     try {
